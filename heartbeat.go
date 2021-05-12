@@ -26,12 +26,12 @@ func usage_stats(print_to_term bool) []byte {
 		RAM free: %s
 		CPU:      %.1f %%
 
-`, 
-		humanize.Bytes(hd_usage.Free()),
-		humanize.Bytes(hd_usage.Used()),
-		humanize.Bytes(ram_usage.Used),
-		humanize.Bytes(ram_usage.Free),
-		cpu_use[0])
+`,
+			humanize.Bytes(hd_usage.Free()),
+			humanize.Bytes(hd_usage.Used()),
+			humanize.Bytes(ram_usage.Used),
+			humanize.Bytes(ram_usage.Free),
+			cpu_use[0])
 	}
 
 	output_map := map[string]int{
@@ -47,12 +47,12 @@ func usage_stats(print_to_term bool) []byte {
 
 func main() {
 	// Argument parser
-	parser := argparse.NewParser("heartbeat", 
-								 "Just a simple system monitoring tool")
+	parser := argparse.NewParser("heartbeat",
+		"Just a simple system monitoring tool")
 	// Returns a pointer
 	// Should output print to terminal?
-	print_to_term := parser.Flag("c", "console", 
-						  &argparse.Options{Help: "Prints stats to console"})
+	print_to_term := parser.Flag("c", "console",
+		&argparse.Options{Help: "Prints stats to console"})
 	parser.Parse(os.Args)
 
 	// Gathers usage stats
