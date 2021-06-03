@@ -40,7 +40,6 @@ func usage_stats(print_to_term bool) []byte {
 			humanize.Bytes(net_use[0].BytesSent),
 			humanize.Bytes(net_use[0].BytesRecv))
 
-
 	}
 
 	output_map := map[string]int{
@@ -51,7 +50,7 @@ func usage_stats(print_to_term bool) []byte {
 		"RAM_free_mb": int(ram_usage.Free / 1024 / 1024),
 		"CPU_pct":     int(cpu_use[0]),
 		"Net_out_mb":  int(net_use[0].BytesSent / 1024 / 1024),
-		"Net_in_mb":   int(net_use[0].BytesRecv/ 1024 / 1024)}
+		"Net_in_mb":   int(net_use[0].BytesRecv / 1024 / 1024)}
 	output_str, _ := json.Marshal(output_map)
 	return output_str
 }
