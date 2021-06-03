@@ -11,12 +11,14 @@ import (
 	memory_usage "github.com/mackerelio/go-osstat/memory"
 	disk_usage "github.com/ricochet2200/go-disk-usage/du"
 	cpu "github.com/shirou/gopsutil/cpu"
+	network "github.com/shirou/gopsutil/net"
 )
 
 func usage_stats(print_to_term bool) []byte {
 	ram_usage, _ := memory_usage.Get()
 	hd_usage := disk_usage.NewDiskUsage("/home/")
 	cpu_use, _ := cpu.Percent(time.Second, false)
+	net_use, _ := network.IOCounters(false)
 
 	if print_to_term {
 		fmt.Printf(`
@@ -25,13 +27,20 @@ func usage_stats(print_to_term bool) []byte {
 		RAM used: %s
 		RAM free: %s
 		CPU:      %.1f %%
+		Net out:  %s
+		Net in:   %s
+
 
 `,
 			humanize.Bytes(hd_usage.Free()),
 			humanize.Bytes(hd_usage.Used()),
 			humanize.Bytes(ram_usage.Used),
 			humanize.Bytes(ram_usage.Free),
-			cpu_use[0])
+			cpu_use[0],
+			humanize.Bytes(net_use[0].BytesSent),
+			humanize.Bytes(net_use[0].BytesRecv))
+
+
 	}
 
 	output_map := map[string]int{
@@ -40,7 +49,9 @@ func usage_stats(print_to_term bool) []byte {
 		"HD_Used_mb":  int(hd_usage.Used() / 1024 / 1024),
 		"RAM_used_mb": int(ram_usage.Used / 1024 / 1024),
 		"RAM_free_mb": int(ram_usage.Free / 1024 / 1024),
-		"CPU_pct":     int(cpu_use[0])}
+		"CPU_pct":     int(cpu_use[0]),
+		"Net_out_mb":  int(net_use[0].BytesSent / 1024 / 1024),
+		"Net_in_mb":   int(net_use[0].BytesRecv/ 1024 / 1024)}
 	output_str, _ := json.Marshal(output_map)
 	return output_str
 }
